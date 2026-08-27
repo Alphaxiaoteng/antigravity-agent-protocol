@@ -40,23 +40,23 @@
 ```mermaid
 sequenceDiagram
     participant User as 用户 (User)
-    participant Sol as 主线程总控 (Coordinator)
+    participant Main as Antigravity 主线程 (Coordinator)
     participant Scout as 侦察 Subagent (research: flash)
     participant Builder as 执行 Subagent (self: flash/pro)
     participant Adversary as 红队审查 Subagent (research: pro)
 
-    User->>Sol: 提交需求
-    Sol->>Sol: 0. 产品思维评估 (JTBD)
-    Sol->>Scout: 派发快速定位 (窗口截断 >150行)
-    Scout-->>Sol: 回传精准行号与 3 行事实摘要
-    Sol->>User: 提交实施计划 (Plan Gate)
-    User-->>Sol: 授权执行
-    Sol->>Builder: 增量编码与本地 TDD 断言编写
-    Builder-->>Sol: 回传测试证据与 Diff
-    Sol->>Adversary: 派发盲盒红队对抗审查 (死锁/边界/注入)
-    Adversary-->>Sol: 回传审查审计报告
-    Sol->>Sol: 双重真实核验 (端口监听 + HTTP 200)
-    Sol->>User: 交付闭环系统与客观证据链
+    User->>Main: 提交需求
+    Main->>Main: 0. 产品思维评估 (JTBD)
+    Main->>Scout: 派发快速定位 (窗口截断 >150行)
+    Scout-->>Main: 回传精准行号与 3 行事实摘要
+    Main->>User: 提交实施计划 (Plan Gate)
+    User-->>Main: 授权执行
+    Main->>Builder: 增量编码与本地 TDD 断言编写
+    Builder-->>Main: 回传测试证据与 Diff
+    Main->>Adversary: 派发盲盒红队对抗审查 (死锁/边界/注入)
+    Adversary-->>Main: 回传审查审计报告
+    Main->>Main: 双重真实核验 (端口监听 + HTTP 200)
+    Main->>User: 交付闭环系统与客观证据链
 ```
 
 ---
