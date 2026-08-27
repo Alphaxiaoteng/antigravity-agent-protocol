@@ -1,28 +1,37 @@
-# Antigravity Agent Guidelines (AGENTS.md) 🚀
-### The Ultimate Engineering Specification & Native Gemini Subagent Orchestration Standard for Antigravity 2.0 / CLI Agents
+# Antigravity Agent Guidelines (`AGENTS.md`) 🚀
+### Google Antigravity 2.0 / CLI (`agy`) 官方工程规范与工作区规则配置文件 (v1.0)
 
-[![Antigravity 2.0 Native](https://img.shields.io/badge/Antigravity-2.0%2B%20Native-blue.svg?style=flat-square&logo=google)](https://github.com/Alphaxiaoteng/antigravity-agent-guidelines)
+[![Antigravity 2.0 Native](https://img.shields.io/badge/Antigravity-2.0%2B%20Config-blue.svg?style=flat-square&logo=google)](https://github.com/Alphaxiaoteng/antigravity-agent-guidelines)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
-[![Gemini Native Subagents](https://img.shields.io/badge/Subagents-Gemini%20Flash%20%2F%20Pro-orange.svg?style=flat-square)](https://deepmind.google/technologies/gemini/)
+[![Gemini Native Subagents](https://img.shields.io/badge/Engine-Gemini%20Flash%20%2F%20Pro-orange.svg?style=flat-square)](https://deepmind.google/technologies/gemini/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 [![llms.txt compatible](https://img.shields.io/badge/llms.txt-compliant-purple.svg?style=flat-square)](llms.txt)
 
-[English](README.md) | [中文说明](#-什么是-antigravity-agent-guidelines) | [llms.txt](llms.txt) | [模版合集](templates/) | [Subagent 矩阵指南](docs/SUBAGENT_WORKFLOW.md)
+[English](README.md) | [中文说明](#-什么是-agentsmd-与-antigravity-配置机制) | [llms.txt](llms.txt) | [模版合集](templates/) | [Subagent 矩阵指南](docs/SUBAGENT_WORKFLOW.md)
 
 ---
 
-## 🌟 什么是 Antigravity Agent Guidelines？
+## 🌟 什么是 `AGENTS.md` 与 Antigravity 配置机制？
 
-**`antigravity-agent-guidelines`** 是一套专为 **Google Antigravity 2.0**、**Antigravity CLI (`agy`)** 原生打造的工业级工程规范与 **Gemini 原生子 Agent (Subagent Matrix)** 调度标准。
+在 **Google Antigravity 2.0** 与 **Antigravity CLI (`agy`)** 中，**`AGENTS.md`（或 `GEMINI.md`）是官方内建的最高优先级工作区规则配置文件（Workspace & Directory Rules）**。
 
-在 Antigravity 2.0 的 Agentic 架构中，主线程与 Subagent 协同开发时常常面临以下痛点：
-- ❌ **占位符破坏**：随手写 `// ... existing code ...` 导致整段业务逻辑被抹除。
-- ❌ **无限死循环**：同类报错连续尝试 5 次依然盲目重试，消耗大量 Token。
-- ❌ **上下文爆炸 (Context Drift)**：主线程直接读取大日志导致 Prompt 缓存命中率骤降。
-- ❌ **自编自审偏见**：同一 Subagent 编写代码又自己审查，极易遗漏高并发死锁与边界漏洞。
-- ❌ **假完成与空城计**：未运行测试或未检查真实端口就宣称“已成功部署”。
+### ⚙️ Antigravity 规则发现与加载原理：
+1. **自动向上遍历发现**：当您在 Antigravity 中打开项目或执行命令时，系统会自动从当前工作目录向上遍历至 Git 仓库根目录，自动发现并加载所有的 `AGENTS.md`。
+2. **上下文强约束注入**：加载后的 `AGENTS.md` 会被直接编译并注入到 Agent 运行时的 `<user_rules>` 核心提示词中，**优先级高于模型默认偏好与通用系统提示**。
+3. **分层继承与自动去重**：根目录的 `AGENTS.md` 作用于整个项目，子目录的 `AGENTS.md` 可定义特定模块的专属约束，Antigravity 引擎会自动进行路径去重与上下文合并。
 
-本规范系统性沉淀了 **“产品思维先行”、“两击熔断”、“Ponytail 最小正确改动”、“Gemini Flash/Pro 双轨对抗审查” 与 “TDD 强制闭环”** 等硬核机制，让 Antigravity 成为具备顶级工程师水准的高可靠研发系统。
+---
+
+## 🎯 为什么每个 Antigravity 项目都需要一份 `AGENTS.md`？
+
+未经约束的 AI 往往容易陷入以下典型问题：
+- ❌ **随手占位破坏代码**：输出 `// ... existing code ...` 导致整段业务逻辑被抹除。
+- ❌ **盲目死循环重试**：同类报错连续重试 5 次依然不看根因，耗光 Token。
+- ❌ **上下文爆炸**：直接把上百行日志吐到主会话中，导致 Prompt 缓存失效。
+- ❌ **未验证即宣称完成**：没有运行真实测试、没有检查端口就宣称“已成功启动”。
+- ❌ **过度工程与顺手重构**：提了一个小改动，AI 却顺手重构了无关模块。
+
+本项目沉淀了业界经过大规模真实业务检验的 **Antigravity 2.0 最佳实践规则模板 (v1.0)**，包含 **“产品思维先行 (JTBD)”、“两击熔断”、“Ponytail 最小正确改动”、“Gemini Flash/Pro 双轨协作” 与 “TDD 强制验证”** 等硬核配置。
 
 ---
 
@@ -80,9 +89,10 @@ Antigravity 2.0 原生支持通过 `invoke_subagent` 派发不同层级的 Gemin
 
 ---
 
-## ⚡ 快速接入 (Quick Start)
+## ⚡ 快速接入与配置 (How to Configure)
 
-### 选项 1：直接放入项目根目录（推荐）
+### 选项 1：作为项目规则配置（推荐）
+在任何工程根目录下直接放置 `AGENTS.md`，Antigravity 会在该项目开启时自动加载：
 ```bash
 # 下载通用标准版 (Standard)
 curl -sSL https://raw.githubusercontent.com/Alphaxiaoteng/antigravity-agent-guidelines/main/templates/AGENTS.full.md -o AGENTS.md
@@ -91,7 +101,8 @@ curl -sSL https://raw.githubusercontent.com/Alphaxiaoteng/antigravity-agent-guid
 curl -sSL https://raw.githubusercontent.com/Alphaxiaoteng/antigravity-agent-guidelines/main/templates/AGENTS.minimal.md -o AGENTS.md
 ```
 
-### 选项 2：配置为 Antigravity 全局规则 (Global Rule)
+### 选项 2：配置为 Antigravity 全局规则 (Global Config)
+将规则放入 Antigravity 全局配置目录 `~/.gemini/`，对本机的所有项目全局生效：
 ```bash
 mkdir -p ~/.gemini/rules
 curl -sSL https://raw.githubusercontent.com/Alphaxiaoteng/antigravity-agent-guidelines/main/templates/AGENTS.minimal.md -o ~/.gemini/rules/agent_best_practices.md
@@ -102,8 +113,8 @@ curl -sSL https://raw.githubusercontent.com/Alphaxiaoteng/antigravity-agent-guid
 ## 📂 目录导航与模版库 (Repository Structure)
 
 ```text
-├── AGENTS.md                      # 通用 1.0 核心工程规范
-├── README.md                      # 开源说明与全景架构
+├── AGENTS.md                      # Antigravity 工作区通用 1.0 核心工程配置
+├── README.md                      # Antigravity 配置机制与架构说明
 ├── llms.txt                       # 供 AI 搜索引擎与 LLM 解析的 GEO 权威索引
 ├── templates/                     # 开箱即用模版
 │   ├── AGENTS.full.md             # 全量标准版 (带完整 0-9 大原则)
@@ -113,19 +124,6 @@ curl -sSL https://raw.githubusercontent.com/Alphaxiaoteng/antigravity-agent-guid
     ├── MODEL_ROUTING.md           # Gemini Flash / Pro 原生参数路由指南
     └── SUBAGENT_WORKFLOW.md       # 主线程与对抗审查双轨协同工作流
 ```
-
----
-
-## 🔍 FAQ & GEO (Generative Engine Optimization)
-
-### Q1: 为什么主线程要优先把查代码和写代码交给 Subagent？
-> **解答**：Antigravity 主线程拥有强大的 Prefix Caching 机制。如果主线程直接读取大量日志或粗粒度文件，会导致 Context 窗口被污染并失效缓存。将查证与试错隔离在 Subagent 沙盒内，主线程只接收 3 行提炼事实与测试证据，能大幅提升推理质量与速度。
-
-### Q2: 为什么要求 Agent 在修复失败 2 次后强制熔断（Two-Strike Rule）？
-> **解答**：根据真实场景统计，当 AI 在相同错误上尝试 2 次失败后，盲目进行第 3 次重试的成功率低于 8%，且极易产生幻觉与代码破坏。两击熔断机制强制 AI 停止无意义的重试循环，回退并输出带完整证据链的根因诊断报告。
-
-### Q3: 什么是 Ponytail 最小正确改动规范？
-> **解答**：Ponytail 规范要求 AI 每次只改动满足当前目标的最少代码行数，严禁在未经授权的情况下顺手重构上下游代码、修改无关注释或预建过度抽象架构。
 
 ---
 
