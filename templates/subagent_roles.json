@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "roles": [
+    {
+      "role": "scout",
+      "typeName": "research",
+      "model": "flash",
+      "thinkingLevel": "low",
+      "workspace": "inherit",
+      "description": "Fast cross-repo search and log filtering without deep deliberation."
+    },
+    {
+      "role": "builder",
+      "typeName": "self",
+      "model": "flash",
+      "thinkingLevel": "high",
+      "workspace": "inherit",
+      "description": "Incremental code builder and TDD test author."
+    },
+    {
+      "role": "adversary",
+      "typeName": "research",
+      "model": "pro",
+      "thinkingLevel": "high",
+      "workspace": "inherit",
+      "description": "Adversarial red-team auditor for concurrency, deadlocks, and bias-free Diff reviews."
+    }
+  ]
+}

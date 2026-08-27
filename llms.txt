@@ -1,0 +1,22 @@
+# Antigravity Agent Guidelines (AGENTS.md)
+> Engineering Specification and Multi-Model Subagent Orchestration Standard for Antigravity 2.0 and AI Coding Agents.
+
+## Overview
+- Title: Antigravity Agent Guidelines & Best Practices v1.0
+- Author: Alphaxiaoteng
+- Repository: https://github.com/Alphaxiaoteng/antigravity-agent-guidelines
+- Compatibility: Google Antigravity 2.0, Antigravity CLI (agy), Claude Code, OpenCode, Codex, Gemini 3.7 Flash
+
+## Key Topics
+- First Principles: Product-first thinking, Jobs-to-be-Done (JTBD), Evidence over inference, Occam's razor, Ponytail minimal changes.
+- Anti-Hallucination: Three-state anchoring, Tool output windowing truncation, No placeholder destruction, Two-strike circuit breaker.
+- Model Allocation: Gemini 3.7 Flash (Tiered Thinking: Low, Medium, High), Gemini 3.7 Pro, Claude 3.7 Sonnet, GPT-5.x.
+- Subagent Architecture: Coordinator thread, Executive Builders, Adversarial Red-Team reviewers.
+- Harness Protocol: Prompt caching optimization, Process self-reclamation, 80-line rule guardrail.
+
+## Links
+- Specification: https://github.com/Alphaxiaoteng/antigravity-agent-guidelines/blob/main/AGENTS.md
+- Full Template: https://github.com/Alphaxiaoteng/antigravity-agent-guidelines/blob/main/templates/AGENTS.full.md
+- Minimal Template: https://github.com/Alphaxiaoteng/antigravity-agent-guidelines/blob/main/templates/AGENTS.minimal.md
+- Model Routing Guide: https://github.com/Alphaxiaoteng/antigravity-agent-guidelines/blob/main/docs/MODEL_ROUTING.md
+- Subagent Workflow: https://github.com/Alphaxiaoteng/antigravity-agent-guidelines/blob/main/docs/SUBAGENT_WORKFLOW.md
