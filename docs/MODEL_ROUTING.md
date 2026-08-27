@@ -4,19 +4,34 @@
 
 ---
 
-## 1. 模型与思考强度三阶矩阵
+## 1. 严格模型分工阶梯 (Gemini 优先 ➔ Luna 备用 ➔ Spark 兜底)
 
-| 任务类型 | 推荐模型 | 思考级别 (Thinking Level) | 适用场景与工作负载 | 预期响应延迟 (TTFT) |
+```mermaid
+graph TD
+    A[任务分发] --> B{任务类型}
+    B -->|侦察/搜索/日志清洗| C[Gemini 3.7 Flash + Medium]
+    B -->|常规编码与TDD开发| D[Gemini 3.7 Flash + High]
+    B -->|独立对抗审查/死锁注入| E[GPT-5.6 Luna + Max]
+    
+    C -.->|Gemini 不可用/超限| F[GPT-5.6 Luna + Max 备用]
+    D -.->|Gemini 不可用/超限| F
+    F -.->|Luna 也不可用/轻量摘要| G[GPT-5.3 Codex Spark + XHigh 兜底]
+```
+
+### 详细参数矩阵
+
+| 梯队 / 角色 | 推荐模型代码 | 思考级别 (Thinking Level) | 适用场景与工作负载 | 关键规则与约束 |
 | :--- | :--- | :--- | :--- | :--- |
-| **侦察与日志检索 (Scout)** | `Gemini 3.7 Flash` / `GPT-5.3 Spark` | `low` (快速响应) | 查找代码定义、跨文件关键词检索、头尾日志过滤、环境状态探测 | < 1 秒 |
-| **常规增量开发 (Builder)** | `Gemini 3.7 Flash` / `Claude 3.7 Sonnet` | `medium` ~ `high` | UI 组件开发、API 路由实现、SQL 增量编写、TDD 单元测试断言 | 2 ~ 4 秒 |
-| **核心架构与复杂事务 (Architect)** | `Gemini 3.7 Flash` / `GPT-5.6` | `high` (深度推理) | 复杂数据库迁移、分布式锁、并发时序控制、状态机设计 | 4 ~ 8 秒 |
-| **红队对抗审查 (Red-Team)** | `Gemini 3.7 Flash Pro` / `GPT-5.6 Luna` | `high` / `max` | 独立盲盒 Diff 审查、死锁注入、边缘用例挑刺、安全合规检查 | 5 ~ 10 秒 |
+| **侦察层 (Scout)** | `gemini-3.7-flash-tiered` | `medium` | 代码定义查找、跨模块依赖分析、长日志/文档扫描与压缩 | 头尾窗口截断（>150行截取并提炼3行摘要） |
+| **执行层 (Builder)** | `gemini-3.7-flash-tiered` | `high` | 增量编写高密度业务代码、后端事务、TDD 单元测试断言 | 限定写入范围，由主线程 Sol 复核 Diff 与测试证据 |
+| **独立审查层 (Adversary)** | `gpt-5.6-luna` | `max` | 独立红队对抗审查、并发死锁与竞态注入、盲盒 Diff 审计 | **Gemini 严禁自审**，必须由 Luna 提供无偏见独立审查 |
+| **核心备用梯队 (Fallback 1)**| `gpt-5.6-luna` | `max` | Gemini 遇到额度受阻、网络不可用或隔离小修复时的主力替代 | 全能主力备用，严禁随意降级 |
+| **轻量兜底梯队 (Fallback 2)**| `gpt-5.3-codex-spark`| `xhigh` | 仅在 Luna 也不可用时承接超轻量搜索、提取与摘要 | 严禁静默替换模型 |
 
 ---
 
-## 2. 调度策略原则
+## 2. 调度策略三大铁律
 
 1. **主线程轻量化 (Lightweight Coordinator)**：主线程作为总指挥，不直接倾倒上百行源码或日志，优先将大块探索与编写下放给子 Agent。
-2. **侦察先行，按需深思 (Tiered Reasoning)**：先用 `low` 思考的 Scout Agent 定位精准行号与依赖，再启动 `high` 思考的 Builder Agent 定点改动，避免全局深思浪费算力。
+2. **侦察先行，按需深思 (Tiered Reasoning)**：先用 `medium` 思考的 Scout 定位精准行号与依赖，再启动 `high` 思考的 Builder 定点改动，避免全局深思浪费算力。
 3. **隔离审查无偏见 (Bias-Free Red-Team)**：编写代码的 Agent 与审查 Diff 的 Agent 必须相互独立，审查 Agent 不预设“代码肯定正确”的前提。
