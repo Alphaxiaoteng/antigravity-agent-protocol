@@ -1,7 +1,7 @@
-# Google Antigravity Agent Engineering Specification (`AGENTS.md`)
-> **规范版本**: v3.0.21 (Production-Ready)  
-> **适用环境**: Google Antigravity (IDE / CLI `agy`) · Agentic AI Coding Assistants  
-> **核心原则**: 产品思维先行 · 事实高于推测 · 最小作用量 (Ponytail) · 确定性闭环交付  
+# Google Antigravity Agent Protocol (`AGENTS.md`)
+> **协议版本**: v3.0.21 (Production-Ready)  
+> **适用环境**: Google Antigravity (IDE / CLI `agy`) · Agentic AI Coding Protocol  
+> **核心原则**: 产品思维先行 · 事实高于推测 · 最小作用量 (Ponytail) · 闭环交付 · 红队对抗审查  
 > **子 Agent 规范**: 详见 [SUBAGENTS.md](SUBAGENTS.md)
 
 ---
@@ -54,14 +54,16 @@
 
 ---
 
-## 6. Subagent 协同与沙盒隔离规范 (Subagent Coordination)
+## 6. Subagent 协同与红队对抗审查 (Subagent & Red-Team Audit)
 - **优先主动派发 (Default to Subagents)**：
   1. 主线程（Coordinator）作为总指挥与集成核心，默认把定位、查证、实现与审查交给对应 Subagent，保持主上下文纯净；
   2. 当任务需要发现文件、多处源码阅读、外部研究、成块编码或独立验证时，以 `invoke_subagent` 作为第一步；不要先在主线程展开大范围搜索再补派发；
   3. 简单问答、路径已知的小范围定点读取、单行修正和极小胶水集成可直接处理，避免机械派发；主线程最终负责架构裁决、结果集成与客观证据验收。
-- **执行与审查双轨隔离**：
-  1. **执行轨**：持有写入与终端执行权限，负责生产代码并通过 TDD 验证；
-  2. **审查轨**：只读沙盒运行，负责注入高并发竞态条件、死锁与极端边界用例，严禁带编写偏见。
+- **红队对抗审查机制 (Adversarial Audit)**：
+  - 在核心架构改动与关键逻辑中，派发只读 Subagent (`adversary`) 进行独立红队对抗审查：
+    1. **死锁与并发注入**：模拟高并发时序竞争与资源争用死锁；
+    2. **业务边界挑刺**：恶意异常输入注入、越权漏洞与幂等性穿透测试；
+    3. **盲盒 Diff 审查**：脱离作者先验偏见，逐行推演变动风险。
   - *详细角色分工与派发模版见 [SUBAGENTS.md](SUBAGENTS.md)*。
 - **上下文纯净度 (Context Purity)**：源码发现、多文件读取、第三方 API 探针试错与脏数据解析在 Subagent 沙盒隔离运行；回传只保留结论、关键路径/行号、风险与测试证据，不倾倒长日志或整段源码。
 - **沙盒自主执行权**：主 Agent 获得授权后，派发的 Subagent 在其沙盒内自动继承执行权，无需重复挂起等待用户确认。
