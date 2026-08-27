@@ -144,6 +144,13 @@ Google Antigravity 采用先进的 Prompt 前缀缓存（Prefix Caching）技术
 
 ---
 
+
+---
+
+## Star 趋势图 (Star History)
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Alphaxiaoteng/antigravity-agent-protocol&type=Date)](https://star-history.com/#Alphaxiaoteng/antigravity-agent-protocol&Date)
+
 ## License
 
 本项目采用 [MIT License](LICENSE) 许可证开源，欢迎自由引用、Fork 与社区共建。
