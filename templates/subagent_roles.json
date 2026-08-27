@@ -1,47 +1,42 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "version": "1.0.0",
-  "routingPolicy": "Gemini-Primary -> Luna-Fallback/Audit -> Spark-Backup",
+  "platform": "Google Antigravity 2.0 Native",
   "roles": [
     {
       "role": "scout",
       "typeName": "research",
-      "model": "gemini-3.7-flash-tiered",
-      "thinkingLevel": "medium",
+      "model": "flash",
       "workspace": "inherit",
-      "description": "Fast cross-repo discovery, definition lookup, and log windowing truncation."
+      "description": "Fast codebase search, definition lookup, and log windowing truncation."
     },
     {
       "role": "builder",
       "typeName": "self",
-      "model": "gemini-3.7-flash-tiered",
-      "thinkingLevel": "high",
+      "model": "flash",
       "workspace": "inherit",
-      "description": "Incremental code author and local TDD test creator."
+      "description": "Incremental code builder and local TDD test author."
+    },
+    {
+      "role": "architect",
+      "typeName": "self",
+      "model": "pro",
+      "workspace": "branch",
+      "description": "Deep-reasoning architectural refactoring in isolated Git sandbox."
     },
     {
       "role": "adversary_auditor",
       "typeName": "research",
-      "model": "gpt-5.6-luna",
-      "thinkingLevel": "max",
+      "model": "pro",
       "workspace": "inherit",
       "description": "Independent red-team reviewer for concurrency deadlocks, boundary tests, and bias-free Diff reviews."
     },
     {
-      "role": "fallback_worker",
-      "typeName": "self",
-      "model": "gpt-5.6-luna",
-      "thinkingLevel": "max",
-      "workspace": "inherit",
-      "description": "Fallback builder when Gemini quota is exhausted."
-    },
-    {
-      "role": "spark_backup",
+      "role": "quick_probe",
       "typeName": "research",
-      "model": "gpt-5.3-codex-spark",
-      "thinkingLevel": "xhigh",
+      "model": "flash_lite",
       "workspace": "inherit",
-      "description": "Lightweight fallback scout when Luna is unavailable."
+      "description": "Ultra-fast state check and lightweight string verification."
     }
   ]
 }

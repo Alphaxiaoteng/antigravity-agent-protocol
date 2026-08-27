@@ -1,37 +1,31 @@
-# 多模型动态路由与分配指南 (Model Routing & Allocation Guide)
+# Antigravity 原生 Gemini Subagent 调度与参数指南
 
-在 Antigravity 2.0 与现代 Agentic AI 协作体系中，合理为不同子任务匹配模型和思考强度（Thinking Level），是兼顾**执行质量、响应延迟与 Token 成本**的核心。
-
----
-
-## 1. 严格模型分工阶梯 (Gemini 优先 ➔ Luna 备用 ➔ Spark 兜底)
-
-```mermaid
-graph TD
-    A[任务分发] --> B{任务类型}
-    B -->|侦察/搜索/日志清洗| C[Gemini 3.7 Flash + Medium]
-    B -->|常规编码与TDD开发| D[Gemini 3.7 Flash + High]
-    B -->|独立对抗审查/死锁注入| E[GPT-5.6 Luna + Max]
-    
-    C -.->|Gemini 不可用/超限| F[GPT-5.6 Luna + Max 备用]
-    D -.->|Gemini 不可用/超限| F
-    F -.->|Luna 也不可用/轻量摘要| G[GPT-5.3 Codex Spark + XHigh 兜底]
-```
-
-### 详细参数矩阵
-
-| 梯队 / 角色 | 推荐模型代码 | 思考级别 (Thinking Level) | 适用场景与工作负载 | 关键规则与约束 |
-| :--- | :--- | :--- | :--- | :--- |
-| **侦察层 (Scout)** | `gemini-3.7-flash-tiered` | `medium` | 代码定义查找、跨模块依赖分析、长日志/文档扫描与压缩 | 头尾窗口截断（>150行截取并提炼3行摘要） |
-| **执行层 (Builder)** | `gemini-3.7-flash-tiered` | `high` | 增量编写高密度业务代码、后端事务、TDD 单元测试断言 | 限定写入范围，由主线程 Sol 复核 Diff 与测试证据 |
-| **独立审查层 (Adversary)** | `gpt-5.6-luna` | `max` | 独立红队对抗审查、并发死锁与竞态注入、盲盒 Diff 审计 | **Gemini 严禁自审**，必须由 Luna 提供无偏见独立审查 |
-| **核心备用梯队 (Fallback 1)**| `gpt-5.6-luna` | `max` | Gemini 遇到额度受阻、网络不可用或隔离小修复时的主力替代 | 全能主力备用，严禁随意降级 |
-| **轻量兜底梯队 (Fallback 2)**| `gpt-5.3-codex-spark`| `xhigh` | 仅在 Luna 也不可用时承接超轻量搜索、提取与摘要 | 严禁静默替换模型 |
+在 Google Antigravity 2.0 中，Subagent 原生基于 **Gemini 基础模型家族** 构建，通过 `invoke_subagent` 工具提供开箱即用的多智能体协同能力。
 
 ---
 
-## 2. 调度策略三大铁律
+## 1. 原生 Model 参数枚举与适用场景
 
-1. **主线程轻量化 (Lightweight Coordinator)**：主线程作为总指挥，不直接倾倒上百行源码或日志，优先将大块探索与编写下放给子 Agent。
-2. **侦察先行，按需深思 (Tiered Reasoning)**：先用 `medium` 思考的 Scout 定位精准行号与依赖，再启动 `high` 思考的 Builder 定点改动，避免全局深思浪费算力。
-3. **隔离审查无偏见 (Bias-Free Red-Team)**：编写代码的 Agent 与审查 Diff 的 Agent 必须相互独立，审查 Agent 不预设“代码肯定正确”的前提。
+`invoke_subagent` 工具的 `Model` 参数支持以下枚举：
+
+| Model 参数值 | 底层 Gemini 模型 | 特性与优势 | 推荐使用场景 |
+| :--- | :--- | :--- | :--- |
+| **`"flash_lite"`** | Gemini Flash-Lite | 极低延迟（<1s），超低 Token 开销 | 文件存在性嗅探、单行字符串提取、环境状态轻量心跳检测 |
+| **`"flash"`** | Gemini 3.7 Flash | 极高吞吐、强推理能力、低延迟 | 跨仓库检索（`research`）、增量代码编写（`self`）、TDD 单元测试 |
+| **`"pro"`** | Gemini 3.7 Pro | 极深推理能力、高复杂度长程规划 | 架构重构设计、红队对抗审查（死锁/竞态检测）、多模块复杂迁移 |
+| **`"inherit"`** (默认) | 继承当前 Agent 模型 | 保持与主调用者一致的思考上下文 | 复杂长任务的无缝接力子任务 |
+
+---
+
+## 2. TypeName 工具权限隔离
+
+- **`"research"`**：只读工具集（代码搜索、文件读取、Web 搜索），无法修改项目代码或执行终端命令，天然适合**侦察 (Scout)** 与**独立红队审查 (Adversary Audit)**。
+- **`"self"`**：完整工具集（继承父级的所有写入、终端执行与测试工具），适合**增量开发 (Builder)** 与**TDD 自动化验证 (Test Engineer)**。
+
+---
+
+## 3. Workspace 隔离模式
+
+- **`"inherit"`**：共享主工作区，改动即时生效。
+- **`"branch"`**：创建隔离的 Git 分支工作区，改动在沙盒内进行，验证通过后再合并，适合高风险重构与大版本迁移。
+- **`"share"`**：基于工作树（Worktree）的共享空间，兼顾隔离与存储效率。
