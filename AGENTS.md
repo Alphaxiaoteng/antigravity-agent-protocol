@@ -1,7 +1,7 @@
 # Antigravity 2.0 / CLI Agent 最佳实践规范 (AGENTS.md)
 > **版本**: 1.0.0  
-> **适用环境**: Google Antigravity 2.0 / Antigravity CLI (`agy`) / Gemini Subagents Matrix  
-> **核心原则**: 产品思维先行 · 事实高于推测 · 最小作用量 · 确定性闭环交付
+> **适用环境**: Google Antigravity 2.0 / Antigravity CLI (`agy`)  
+> **子 Agent 分配**: 详见 [SUBAGENTS.md](SUBAGENTS.md)
 
 ---
 
@@ -53,24 +53,16 @@
 
 ---
 
-## 6. Antigravity 原生 Subagent 协同矩阵 (Native Gemini Subagent Matrix)
+## 6. Subagent 协同与多模型调度 (Subagent Matrix)
 - **优先主动派发 (Default to Subagents)**：
-  1. **主线程 (Coordinator)** 作为总指挥与集成核心，默认把绝大部分定位、查证、实现与审查交给对应 Subagent，保持主上下文纯净；
+  1. 主线程（Coordinator）作为总指挥与集成核心，默认把定位、查证、实现与审查交给对应 Subagent，保持主上下文纯净；
   2. 当任务需要发现文件、多处源码阅读、外部研究、成块编码或独立验证时，以 `invoke_subagent` 作为第一步；不要先在主线程展开大范围搜索再补派发；
   3. 简单问答、路径已知的小范围定点读取、单行修正和极小胶水集成可直接处理，避免机械派发；主线程最终负责架构裁决、结果集成与客观证据验收。
-- **原生 Gemini Subagent 模型与角色分发标准**：
-  - **`flash_lite` (Gemini Flash-Lite 超轻量级)**：用于极速文件存在性判断、轻量状态探测、单点文本提取，延迟极低（< 1s）。
-  - **`flash` (Gemini 3.7 Flash 核心主力)**：
-    - **侦察轨 (`TypeName: "research"`)**：负责跨仓库符号搜索、日志过滤压缩、第三方文档提取。
-    - **执行轨 (`TypeName: "self"`)**：负责增量业务代码编写、前端 UI 组件、SQL 脚本与 TDD 单元测试断言。
-  - **`pro` (Gemini 3.7 Pro 深度推理与红队审计)**：
-    - **对抗审查 (`TypeName: "research"`)**：专职并发死锁注入、业务边界挑战、跨模块架构深思与无偏见盲盒 Diff 审查。
-    - **复杂重构 (`TypeName: "self"`, `Workspace: "branch"`)**：负责大型架构重构与多模块迁移。
-- **双轨协同与对抗审查机制 (Red-Team Audit)**：
-  1. **执行轨 (Executive Builders)**：持有写入与终端执行权限，负责生产代码并通过 TDD 验证；
-  2. **审查轨 (Adversary Auditors)**：只读沙盒运行，负责注入高并发竞态条件、死锁与极端边界用例，严禁带编写偏见。
-- **上下文纯净度 (Context Purity)**：源码发现、多文件读取、第三方 API 探针试错与脏数据解析在 Subagent 沙盒隔离运行；回传只保留结论、关键路径/行号、风险与测试证据，不倾倒长日志或整段源码。
-- **沙盒自主执行权**：主 Agent 获得授权后，派发的 Subagent 在其沙盒内自动继承执行权，无需重复挂起等待用户确认。
+- **角色与模型分工**：
+  - 快速侦察：`research` + `flash` / `flash_lite`；
+  - 常规开发：`self` + `flash`；
+  - 架构与红队审查：`pro`（只读独立对抗审查，严禁自审偏见）。
+  - *详细矩阵与派发模版见 [SUBAGENTS.md](SUBAGENTS.md)*。
 
 ---
 
