@@ -1,12 +1,13 @@
-# Antigravity 2.0 Subagent 角色分工与派发规范 (SUBAGENTS.md)
-> **适用环境**: Google Antigravity 2.0 / Antigravity CLI (`agy`) / Agentic AI Workflows  
-> **核心原则**: 最小职责派发 · 上下文纯净 · 执行与审查双轨隔离 · 沙盒自主验证
+# Google Antigravity Subagent 角色分工与派发规范 (`SUBAGENTS.md`)
+> **规范版本**: v3.0.21 (Production-Ready)  
+> **适用环境**: Google Antigravity (IDE / CLI `agy`) · Multi-Agent Orchestration  
+> **核心原则**: 最小职责派发 · 上下文纯净 · 执行与审查双轨隔离 · 沙盒自主闭环
 
 ---
 
 ## 1. 核心角色与职责分工 (Role Matrix)
 
-在 Antigravity 体系中，严禁主线程包揽全部大文件扫描与粗粒度编码，亦严禁由同一角色自编自审。子任务应按职责划分为**执行轨**与**审查轨**：
+在 Antigravity 智能体工程体系中，严禁主线程包揽全部大文件扫描与粗粒度编码，亦严禁由同一角色自编自审。子任务应按职责划分为**执行轨**与**审查轨**：
 
 | 角色代号 (Role) | 派发类型 (TypeName) | 权限边界 | 隔离模式 (Workspace) | 核心职责与交付物 |
 | :--- | :--- | :--- | :--- | :--- |

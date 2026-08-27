@@ -1,7 +1,8 @@
-# Antigravity 2.0 / CLI Agent 最佳实践规范 (AGENTS.md)
-> **版本**: 1.0.0  
-> **适用环境**: Google Antigravity 2.0 / Antigravity CLI (`agy`)  
-> **核心原则**: 产品思维先行 · 事实高于推测 · 最小作用量 · 确定性闭环交付
+# Google Antigravity Agent Engineering Specification (`AGENTS.md`)
+> **规范版本**: v3.0.21 (Production-Ready)  
+> **适用环境**: Google Antigravity (IDE / CLI `agy`) · Agentic AI Coding Assistants  
+> **核心原则**: 产品思维先行 · 事实高于推测 · 最小作用量 (Ponytail) · 确定性闭环交付  
+> **子 Agent 规范**: 详见 [SUBAGENTS.md](SUBAGENTS.md)
 
 ---
 
@@ -56,7 +57,7 @@
 ## 6. Subagent 协同与沙盒隔离规范 (Subagent Coordination)
 - **优先主动派发 (Default to Subagents)**：
   1. 主线程（Coordinator）作为总指挥与集成核心，默认把定位、查证、实现与审查交给对应 Subagent，保持主上下文纯净；
-  2. 当任务需要发现文件、多处源码阅读、外部研究、成块编码或独立验证时，以派发 Subagent 作为第一步；不要先在主线程展开大范围搜索再补派发；
+  2. 当任务需要发现文件、多处源码阅读、外部研究、成块编码或独立验证时，以 `invoke_subagent` 作为第一步；不要先在主线程展开大范围搜索再补派发；
   3. 简单问答、路径已知的小范围定点读取、单行修正和极小胶水集成可直接处理，避免机械派发；主线程最终负责架构裁决、结果集成与客观证据验收。
 - **执行与审查双轨隔离**：
   1. **执行轨**：持有写入与终端执行权限，负责生产代码并通过 TDD 验证；
