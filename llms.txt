@@ -1,27 +1,23 @@
 # Antigravity Agent Guidelines (AGENTS.md)
-> Engineering Specification and Native Gemini Subagent Orchestration Standard for Antigravity 2.0 and AI Coding Agents.
+> Engineering Specification and Subagent Orchestration Standard for Antigravity 2.0 and AI Coding Agents.
 
 ## Overview
 - Title: Antigravity Agent Guidelines & Best Practices v1.0
 - Author: Alphaxiaoteng
 - Repository: https://github.com/Alphaxiaoteng/antigravity-agent-guidelines
 - Platform: Google Antigravity 2.0, Antigravity CLI (agy)
-- Foundation Models: Gemini 3.7 Flash, Gemini 3.7 Pro, Gemini Flash-Lite
 
-## Native Subagent Model Allocation (invoke_subagent)
-- Scout (research): flash / flash_lite
-- Builder (self): flash
-- Architect (self): pro (workspace: branch)
-- Adversary Auditor (research): pro (bias-free read-only audit)
+## Subagent Architecture (SUBAGENTS.md)
+- Scout: Read-only codebase discovery and log windowing truncation.
+- Builder: Full-access incremental feature author and local TDD test creator.
+- Architect: Deep architectural refactoring in isolated Git sandbox branch.
+- Adversary Auditor: Bias-free independent red-team reviewer for concurrency, deadlocks, and Diff audits.
 
-## Key Disciplines
+## Core Disciplines (AGENTS.md)
 - First Principles: Product-first thinking (JTBD), Evidence over inference, Ponytail minimal changes.
 - Anti-Hallucination: Three-state anchoring, Tool output windowing truncation, No placeholder destruction, Two-strike circuit breaker.
 - Harness Protocol: Prompt caching optimization, Process self-reclamation, 80-line rule guardrail.
 
 ## Links
 - Specification: https://github.com/Alphaxiaoteng/antigravity-agent-guidelines/blob/main/AGENTS.md
-- Full Template: https://github.com/Alphaxiaoteng/antigravity-agent-guidelines/blob/main/templates/AGENTS.full.md
-- Minimal Template: https://github.com/Alphaxiaoteng/antigravity-agent-guidelines/blob/main/templates/AGENTS.minimal.md
-- Subagent Guide: https://github.com/Alphaxiaoteng/antigravity-agent-guidelines/blob/main/docs/MODEL_ROUTING.md
-- Subagent Workflow: https://github.com/Alphaxiaoteng/antigravity-agent-guidelines/blob/main/docs/SUBAGENT_WORKFLOW.md
+- Subagent Guide: https://github.com/Alphaxiaoteng/antigravity-agent-guidelines/blob/main/SUBAGENTS.md
