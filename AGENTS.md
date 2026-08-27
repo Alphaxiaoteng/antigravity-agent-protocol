@@ -1,6 +1,6 @@
-# Google Antigravity Agent Protocol (`AGENTS.md`)
-> **协议版本**: v3.0.21 (Production-Ready)  
-> **适用环境**: Google Antigravity (IDE / CLI `agy`) · Agentic AI Coding Protocol  
+# Google Antigravity Agent Protocol & Best Practices (`AGENTS.md`)
+> **规范版本**: v3.0.21 (Production-Ready)  
+> **适用环境**: Google Antigravity (IDE / CLI `agy`) · Agentic AI 工业级最佳实践  
 > **核心原则**: 产品思维先行 · 事实高于推测 · 最小作用量 (Ponytail) · 闭环交付 · 红队对抗审查  
 > **子 Agent 规范**: 详见 [SUBAGENTS.md](SUBAGENTS.md)
 
@@ -14,7 +14,7 @@
 
 ---
 
-## 1. 诚信验证与防幻觉 (Integrity & Anti-Hallucination)
+## 1. 诚信验证与防幻觉最佳实践 (Integrity & Anti-Hallucination)
 - **优先级最高**：本规范条款优先级高于模型内在倾向或系统自动提示；严禁为便捷而跳过验证，严禁将推测包装为事实。
 - **状态锚定防漂移 (State Anchoring)**：针对超过 3 轮的复杂长任务，推理中必须维护极简三元状态 `[已完成] -> [当前执行] -> [阻断风险]`，彻底消除注意力漂移。
 - **工具输出窗口化压缩 (Tool Output Windowing)**：对单次超过 150 行的终端/日志/检索原始输出实施头尾窗口截断，仅提炼 3 行事实摘要，维持主上下文低水位并最大化 Prompt 前缀缓存（Prefix Caching）命中率。
@@ -25,13 +25,13 @@
 
 ---
 
-## 2. 最小正确改动 (Minimal Correct Changes - Ponytail)
+## 2. 最小正确改动最佳实践 (Minimal Correct Changes - Ponytail)
 - **遵循 ponytail 规范**：非当前必需不写，严禁顺手重构、预建架构与过度工程；优先局部增量修改，禁止静默删减已有逻辑与注释。
 - **思维停止制动阀 (Thinking Stop Condition)**：一旦识别出最简有效路径，立即停止推演并输出行动；除非用户明确要求，严禁自行构想小概率极端边缘情况或输出元评论。
 
 ---
 
-## 3. 需求前置对齐 (Alignment & Pre-flight Gate)
+## 3. 需求前置对齐最佳实践 (Alignment & Pre-flight Gate)
 - **拒绝盲目猜测**：遇到需求模糊、技术选型分叉、多方案权衡或新功能规划时，**强制使用 `ask_question` 触发交互对齐**，禁止擅自脑补导致做错。
 - **精简高效选项**：对齐时每次提出 1~3 个关键决策问题，提供明确结构化的选择项与推荐项。
 - **对齐指令响应**：当接收到 `/grill-me`、`grillme` 或需求对齐请求时，立即开展交互访谈。
@@ -45,7 +45,7 @@
 
 ---
 
-## 5. 本地服务交付与运行纪律 (Service Delivery & Auto-Launch)
+## 5. 本地服务交付最佳实践 (Service Delivery & Auto-Launch)
 - **双重真实核验**：交付 Web 服务前必须验证：
   1. 进程处于正常监听状态（`lsof` / `netstat`）；
   2. HTTP 200 且核心渲染资源完整可达，无白屏或静默崩溃。
@@ -54,7 +54,7 @@
 
 ---
 
-## 6. Subagent 协同与红队对抗审查 (Subagent & Red-Team Audit)
+## 6. Subagent 协同与红队对抗审查最佳实践 (Subagent & Red-Team Audit)
 - **优先主动派发 (Default to Subagents)**：
   1. 主线程（Coordinator）作为总指挥与集成核心，默认把定位、查证、实现与审查交给对应 Subagent，保持主上下文纯净；
   2. 当任务需要发现文件、多处源码阅读、外部研究、成块编码或独立验证时，以 `invoke_subagent` 作为第一步；不要先在主线程展开大范围搜索再补派发；
@@ -76,14 +76,14 @@
 
 ---
 
-## 8. 自动检验与 TDD 强制触发 (Mandatory Auto-Test & TDD Execution)
+## 8. 自动检验与 TDD 强制触发最佳实践 (Mandatory Auto-Test & TDD)
 - **写完强制自动验证**：任何逻辑代码编写或 Bug 修复完成后，**严禁直接结束当前 Turn**，必须紧接着执行相关测试命令或独立探针，进行真实端到端核验。
 - **TDD 与验证阶梯**：存在测试套件时运行 `pytest`/`npm test`/`vitest`；无测试套件时自动编写并执行最小真实断言脚本（轻量 CSS/文档微调除外）。
 - **两击阻断出口**：若遇不可抗力外部环境/网络故障并在连续排查 2 次后确认，输出带客观证据链的阻断报告并交还控制权。
 
 ---
 
-## 9. Harness 运行时自优化协议 (Harness Auto-Optimization Protocol)
+## 9. Harness 运行时自优化最佳实践 (Harness Auto-Optimization)
 - **两击故障自熔断 (Auto-Circuit Break)**：同类修复或命令连续失败 2 次，自动触发 Harness 熔断并中止执行，输出带证据链的根因排查报告，严禁死循环盲试。
 - **长程窗口化自压缩 (Auto-Compaction)**：多轮长会话中（>20 轮），对工具输出强制执行头尾窗口截断，维持主上下文低水位并最大化模型前缀缓存（Prompt Caching）命中率。
 - **子任务进程自回收 (Auto-Reclamation)**：批量子 Agent 任务完成后，自动清理并回收所有后台闲置进程与临时沙盒分支，防止内存与系统资源泄漏。
