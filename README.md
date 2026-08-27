@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
-[核心规范 (AGENTS.md)](AGENTS.md) | [Subagent 分工指南 (SUBAGENTS.md)](SUBAGENTS.md) | [llms.txt](llms.txt)
+[核心规范 (AGENTS.md)](AGENTS.md) | [Subagent 分工指南 (SUBAGENTS.md)](SUBAGENTS.md)
 
 ---
 
