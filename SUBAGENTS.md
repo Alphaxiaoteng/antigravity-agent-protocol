@@ -1,13 +1,21 @@
 # Google Antigravity Subagent 角色分工与红队对抗审查协议 (SUBAGENTS.md)
 > 协议版本: v3.0.21 (Production-Ready)  
 > 适用环境: Google Antigravity (IDE / CLI agy) · Agentic Multi-Agent Protocol  
-> 核心机制: 执行与审查双轨硬隔离 · 独立红队对抗注入 · 沙盒自主闭环
+> 核心机制: 上下文沙盒净化 · 执行与审查双轨硬隔离 · 独立红队对抗注入 · 沙盒自主闭环
 
 ---
 
-## 1. 双轨职责与权限隔离矩阵 (Dual-Track Architecture)
+## 1. 上下文净化与沙盒隔离原则 (Context Purity Protocol)
 
-在 Antigravity 智能体工程体系中，严禁同一 Agent 自编自审。必须严格划分为执行轨 (Executive Track) 与 对抗审查轨 (Audit Track)：
+在大规模项目中，Subagent 的首要职责是**充当主线程的上下文防火墙 (Context Firewall)**：
+
+1. **脏数据物理隔离**：所有的跨文件搜索、未过滤的大日志扫描、第三方 API 探针试错均在 Subagent 内部消化，严禁溢出到主会话；
+2. **三行事实摘要回传**：Subagent 完成任务后，仅向主线程汇报：(1) 精准文件路径与行号；(2) 关键结论/风险；(3) 终端测试退出码与证据；严禁回传整段原始代码或数百行长日志；
+3. **消除作者自审偏见**：由独立的只读 Subagent 承担审查，防止同一个 Agent 带着思维定势自编自审。
+
+---
+
+## 2. 双轨职责与权限隔离矩阵 (Dual-Track Architecture)
 
 | 角色代号 (Role) | 派发类型 (TypeName) | 权限边界 | 隔离模式 (Workspace) | 核心职责与交付物 |
 | :--- | :--- | :--- | :--- | :--- |
@@ -18,29 +26,29 @@
 
 ---
 
-## 2. 核心机制：红队对抗审查三要素 (Adversarial Red-Team Audit)
+## 3. 核心机制：红队对抗审查三要素 (Adversarial Red-Team Audit)
 
 在核心架构改动、重大业务重构或关键逻辑交付前，主线程必须派发独立的 `Adversary` Subagent，执行三项对抗性压力测试：
 
-### 2.1 并发与时序死锁注入 (Concurrency & Lock Injection)
+### 3.1 并发与时序死锁注入 (Concurrency & Lock Injection)
 - 锁顺序倒置探测：推演在多线程/多进程高并发场景下，锁获取顺序是否存在死锁风险；
 - 竞态条件 (Race Condition)：检查共享状态读写、非原子操作与时序窗口竞争；
 - 连接池与资源泄漏：检查连接未释放、句柄耗尽与协程/子进程孤儿化风险。
 
-### 2.2 业务边界与红线反向挑刺 (Boundary & Invariant Attack)
+### 3.2 业务边界与红线反向挑刺 (Boundary & Invariant Attack)
 - 恶意/异常输入构造：注入空值、极大超长输入、特殊编码、SQL/命令注入向量；
 - 越权与权限击穿：审查是否存在水平/垂直越权（IDOR/BOLA）与未鉴权暴露面；
 - 幂等性与重放攻击：验证支付、扣费、状态流转接口是否具备防重放与严格幂等性保障。
 
-### 2.3 盲盒 Diff 独立审查 (Blind-Box Diff Review)
+### 3.3 盲盒 Diff 独立审查 (Blind-Box Diff Review)
 - 去偏见盲盒推演：脱离编写者的上下文推导过程，仅针对 Git Diff 变更逐行推演；
 - 破坏性检查：严格拦截任何静默删减已有逻辑、丢失注释或引入占位符破坏的行为。
 
 ---
 
-## 3. 标准派发代码模版 (Dispatch Templates)
+## 4. 标准派发代码模版 (Dispatch Templates)
 
-### 3.1 侦察与日志检索 (Scout)
+### 4.1 侦察与日志检索 (Scout)
 ```json
 {
   "TypeName": "research",
@@ -50,7 +58,7 @@
 }
 ```
 
-### 3.2 常规增量开发 (Builder)
+### 4.2 常规增量开发 (Builder)
 ```json
 {
   "TypeName": "self",
@@ -60,7 +68,7 @@
 }
 ```
 
-### 3.3 独立红队对抗审查 (Adversary)
+### 4.3 独立红队对抗审查 (Adversary)
 ```json
 {
   "TypeName": "research",
