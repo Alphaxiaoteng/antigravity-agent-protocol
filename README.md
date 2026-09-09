@@ -18,16 +18,16 @@
 ### 选项 1：项目级规则（推荐，放入当前工程根目录）
 ```bash
 # 1. 下载核心工程协议 AGENTS.md (v3.0.21)
-curl -sSL https://raw.githubusercontent.com/Alphaxiaoteng/antigravity-agent-protocol/main/AGENTS.md -o AGENTS.md
+curl -sSL https://raw.githubusercontent.com/alphaxiaoteng/antigravity-agent-protocol/main/AGENTS.md -o AGENTS.md
 
 # 2. 下载子 Agent 对抗审查手册 SUBAGENTS.md (v3.0.21)
-curl -sSL https://raw.githubusercontent.com/Alphaxiaoteng/antigravity-agent-protocol/main/SUBAGENTS.md -o SUBAGENTS.md
+curl -sSL https://raw.githubusercontent.com/alphaxiaoteng/antigravity-agent-protocol/main/SUBAGENTS.md -o SUBAGENTS.md
 ```
 
 ### 选项 2：Antigravity 全局规则（对本机所有项目全局自动生效）
 ```bash
 mkdir -p ~/.gemini/rules
-curl -sSL https://raw.githubusercontent.com/Alphaxiaoteng/antigravity-agent-protocol/main/AGENTS.md -o ~/.gemini/rules/antigravity_protocol.md
+curl -sSL https://raw.githubusercontent.com/alphaxiaoteng/antigravity-agent-protocol/main/AGENTS.md -o ~/.gemini/rules/antigravity_protocol.md
 ```
 
 ### 运行机制说明
